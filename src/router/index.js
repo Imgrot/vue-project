@@ -28,7 +28,7 @@ const router = createRouter({
     {
       path: '/edit/:id',
       name: 'edit',
-      component: () => import('../views/Departments/Index.vue')
+      component: () => import('../views/Departments/Edit.vue')
     },
     {
       path: '/create',
@@ -55,7 +55,7 @@ const router = createRouter({
 
 router.beforeEach(async (to) => {
   const publicPages = ['/login', '/register']
-  const authRequired = publicPages.includes(to.path)
+  const authRequired = !publicPages.includes(to.path)
   const auth = useAuthStore()
   if (authRequired && !auth.user) {
     auth.returnUrl = to.fullPath
