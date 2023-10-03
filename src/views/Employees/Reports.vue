@@ -91,9 +91,8 @@ buttons2.value = [
         className: 'btn btn-secondary'
     }
 ]
-
-
 </script>
+
 <template>
     <div class="row mb-5">
         <div class="col-md-8 offset-md-2">
@@ -124,14 +123,15 @@ buttons2.value = [
         <div class="col-md-8 offset-md-2">
             <div class="table-responsive">
                 <DataTable :data="departments" :columns="columns2" class="table table-striped"
-                :options="{responsive:true, autoWidth:false,dom:'Bfrtip',buttons:buttons2}">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>NAME</th>
-                    </tr>
-                </thead>
-            </DataTable>
+                    :options="{ responsive: true, autoWidth: false, dom: 'Bfrtip', buttons: buttons2 }">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>NAME</th>
+                        </tr>
+                    </thead>
+                </DataTable>
+            </div>
         </div>
     </div>
-</div></template>
+</template>

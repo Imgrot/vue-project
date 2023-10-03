@@ -3,25 +3,26 @@ import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { sendRequest } from '../../functions';
 import { useAuthStore } from '../../stores/auth';
-import { useRouter } from 'vue-router';
 import axios from 'axios';
 
 const route = useRoute();
 const authStore = useAuthStore();
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + authStore.authToken;
+
 const form = ref({ id: '', name: '' });
 const id = ref(route.params.id);
+
 onMounted(() => { getDepartment() });
 const getDepartment = () => {
     axios.get('api/departments/' + id.value).then(
         response => (form.value.name = response.data.data.name)
     );
 }
-
 const save = () => {
     sendRequest('PUT', form.value, ('/api/departments/' + id.value), '/departments');
 }
 </script>
+
 <template>
     <div class="row mt-5">
         <div class="col-md-4 offset-md-4">

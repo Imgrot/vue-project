@@ -15,9 +15,10 @@ const getDepartments = async () => {
         response => (deparments.value = response.data));
     load.value = true;
 }
-const deleteDepartment = (id, name) => {
+const eliminar = (id, name) => {
     confirmation(name, ('/api/departments/' + id), '/departments');
 }
+
 </script>
 <template>
     <div class="row">
@@ -56,9 +57,10 @@ const deleteDepartment = (id, name) => {
                                 </router-link>
                             </td>
                             <td>
-                                <button class="btn btn-danger" @click="deleteDepartment(dep.id, dep.name)">
+                                <button class="btn btn-danger" @click="eliminar(dep.id, dep.name)">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
+                                
                             </td>
                         </tr>
                     </tbody>
