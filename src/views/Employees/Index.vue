@@ -4,6 +4,8 @@ import { ref, onMounted, nextTick } from 'vue';
 import { confirmation, sendRequest } from '../../functions';
 import { useAuthStore } from '../../stores/auth';
 import Paginate from 'vuejs-paginate-next';
+import { visible } from '../../functions';
+
 const authStore = useAuthStore();
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + authStore.authToken;
 
@@ -11,7 +13,7 @@ onMounted(() => { getDepartments(), getEmployees(1) });
 const departments = ref([]);
 const employees = ref([]);
 const load = ref(false);
-const rows = ref(0); 
+const rows = ref(0);
 
 const getDepartments = async () => {
     await axios.get('/api/departments').then(
@@ -29,8 +31,8 @@ const getEmployees = async (page) => {
     load.value = true;
 }
 
-const deleteEmployee = (id, name) => {
-    confirmation(name, ('/api/employees/' + id), '/employees');
+const switchVis = (id, name, hide) => {
+    visible(name, ('/api/employees/' + id), '/employees', hide);
 }
 
 </script>
@@ -78,7 +80,10 @@ const deleteEmployee = (id, name) => {
                                 </router-link>
                             </td>
                             <td>
-                                <button class="btn btn-danger" @click="deleteEmployee(emp.id, emp.name)">
+                                <button v-if="emp.hide == 'n'" class=" btn btn-danger" @click="switchVis(emp.id, emp.name, emp.hide)">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                                <button v-else class=" btn btn-success" @click="switchVis(emp.id, emp.name, emp.hide)">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                             </td>

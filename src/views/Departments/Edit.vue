@@ -9,13 +9,17 @@ const route = useRoute();
 const authStore = useAuthStore();
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + authStore.authToken;
 
-const form = ref({ id: '', name: '' });
+const form = ref({ id: '', name: '' , hide: ''});
 const id = ref(route.params.id);
 
 onMounted(() => { getDepartment() });
+
 const getDepartment = () => {
     axios.get('api/departments/' + id.value).then(
-        response => (form.value.name = response.data.data.name)
+        response => (
+            form.value.name = response.data.data.name,
+            form.value.hide = response.data.data.hide
+            )
     );
 }
 const save = () => {

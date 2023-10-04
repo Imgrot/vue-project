@@ -1,23 +1,25 @@
 <script setup>
 import axios from 'axios';
 import { ref, onMounted } from 'vue';
-import { confirmation } from '../../functions';
+import { visible } from '../../functions';
 import { useAuthStore } from '../../stores/auth';
 
 const authStore = useAuthStore();
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + authStore.authToken;
 onMounted(() => { getDepartments() });
 
-const deparments = ref([]);
+const departments = ref([]);
 const load = ref(false);
+
 const getDepartments = async () => {
     await axios.get('/api/departments').then(
-        response => (deparments.value = response.data));
+        response => (departments.value = response.data));
     load.value = true;
 }
-const eliminar = (id, name) => {
-    confirmation(name, ('/api/departments/' + id), '/departments');
-}
+
+const switchVis = (id, name, hide) => {
+    visible(name, '/api/departments/' + id, '/departments', hide);
+};
 
 </script>
 <template>
@@ -48,7 +50,7 @@ const eliminar = (id, name) => {
                         </tr>
                     </thead>
                     <tbody class="table-group-divider">
-                        <tr v-for="dep, i in deparments" :key="dep.id">
+                        <tr v-for="dep, i in departments" :key="dep.id">
                             <td>{{ (i + 1) }}</td>
                             <td>{{ dep.name }}</td>
                             <td>
@@ -57,10 +59,12 @@ const eliminar = (id, name) => {
                                 </router-link>
                             </td>
                             <td>
-                                <button class="btn btn-danger" @click="eliminar(dep.id, dep.name)">
+                                <button v-if="dep.hide == 'n'" class=" btn btn-danger" @click="switchVis(dep.id, dep.name, dep.hide)">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
-                                
+                                <button v-else class=" btn btn-success" @click="switchVis(dep.id, dep.name, dep.hide)">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
                             </td>
                         </tr>
                     </tbody>

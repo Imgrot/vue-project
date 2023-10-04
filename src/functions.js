@@ -45,3 +45,31 @@ export async function sendRequest(method, params, url, redirect = '') {
         })
     return res;
 }
+
+export function visible(name, url, redirect, hide) {
+    const alert = Swal.mixin({ buttonsStyling: true });
+
+    axios.get(url).then(response => {
+
+        const newHideValue = (hide === 'n') ? 's' : 'n';
+
+        alert.fire({
+            title: 'Are you sure you want to switch the visibility of "' + name + '" ?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: '<i class="fa-solid fa-check"></i> Yes, switch',
+            cancelButtonText: '<i class="fa-solid fa-ban"></i> Cancel'
+
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.put(url, { name: name, hide: newHideValue })
+                    .then(() => { 
+                              window.location.href = redirect;
+                     })
+                    .catch((error) => {
+                        console.error('Error al cambiar la visibilidad:', error);
+                    });
+            }
+        });
+    });
+}

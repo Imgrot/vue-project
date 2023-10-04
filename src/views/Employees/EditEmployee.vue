@@ -9,7 +9,7 @@ const route = useRoute();
 const authStore = useAuthStore();
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + authStore.authToken;
 
-const form = ref({ id: '', name: '', email: '', phone: '', department_id: '' });
+const form = ref({ id: '', name: '', email: '', phone: '', department_id: '', hide: '' });
 const id = ref(route.params.id);
 const departments = ref([]);
 
@@ -17,6 +17,9 @@ onMounted(async () => {
     try {
         const response = await axios.get('/api/departments');
         departments.value = response.data;
+        const response2 = await axios.get('api/employees/' + id.value);
+        form.value.hide = response2.data.hide;
+
     } catch (error) {
         console.error('Error al obtener la lista de departamentos:', error);
     }
@@ -27,10 +30,11 @@ const save = () => {
         name: form.value.name,
         email: form.value.email,
         phone: form.value.phone,
-        department_id: form.value.department_id
+        department_id: form.value.department_id,
+        hide: form.value.hide
     };
 
-    sendRequest('PUT', form.value, ('/api/employees/' + id.value), '/employees');
+    sendRequest('PUT', data.value, ('/api/employees/' + id.value), '/employees');
 }
 </script>
 <template>
