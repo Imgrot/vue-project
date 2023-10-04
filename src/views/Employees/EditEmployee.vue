@@ -17,8 +17,9 @@ onMounted(async () => {
     try {
         const response = await axios.get('/api/departments');
         departments.value = response.data;
+
         const response2 = await axios.get('api/employees/' + id.value);
-        form.value.hide = response2.data.hide;
+        form.value = response2.data.data;
 
     } catch (error) {
         console.error('Error al obtener la lista de departamentos:', error);
@@ -26,17 +27,11 @@ onMounted(async () => {
 });
 
 const save = () => {
-    const data = {
-        name: form.value.name,
-        email: form.value.email,
-        phone: form.value.phone,
-        department_id: form.value.department_id,
-        hide: form.value.hide
-    };
 
-    sendRequest('PUT', data.value, ('/api/employees/' + id.value), '/employees');
+    sendRequest('PUT', form.value, ('/api/employees/' + id.value), '/employees');
 }
 </script>
+
 <template>
     <div class="row mt-5">
         <div class="col-md-4 offset-md-4">
