@@ -30,8 +30,11 @@
                             </span>
                             <select v-model="form.department_id">
                                 <option disabled value="">Please select one</option>
-                                <option v-for="department in departments" :value="department.id">{{ department.name }}
-                                </option>
+                                <template v-for="department in departments">
+                                    <option v-if="department.hide == 'n'" :value="department.id">
+                                        {{ department.name }}
+                                    </option>
+                                </template>
                             </select>
                         </div>
                         <div class="d-grid col-10 mx-auto">
@@ -47,11 +50,13 @@
 </template>
 
 <script setup>
+import Swal from 'sweetalert2';
 import { ref, nextTick, onMounted } from 'vue';
 import { sendRequest } from '../../functions';
 import { useAuthStore } from '../../stores/auth';
 import axios from 'axios';
 
+const alert = Swal.mixin({ buttonsStyling: true });
 const nameInput = ref('');
 const departments = ref([]);
 const authStore = useAuthStore();
@@ -66,15 +71,23 @@ onMounted(async () => {
     }
 });
 
-const form = ref({ name: '', email: '', phone: '', department_id: '' });
+const form = ref({ name: '', email: '', phone: '', department_id: '', hide: 'n' });
 
 const save = () => {
-    sendRequest('POST', form.value, '/api/employees', '');
-    form.value.name = '';
-    form.value.email = '';
-    form.value.phone = '';
-    form.value.department_id = '';
-    nextTick(() => nameInput.value.focus());
+    const largo = form.value.phone;
+    if (largo.length > 15) {
+        alert.fire({
+            title: 'The limit of digits on "phone" is 15.',
+            html: 'Please re-enter the phone number.',
+            confirmButtonText: '<i class="fa-solid fa-check"></i> Ok',
+        });
+    } else {
+        sendRequest('POST', form.value, '/api/employees', '');
+        form.value.name = '';
+        form.value.email = '';
+        form.value.phone = '';
+        form.value.department_id = '';
+        nextTick(() => nameInput.value.focus());
+    }
 };
 </script>
-  

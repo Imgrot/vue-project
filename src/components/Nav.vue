@@ -32,7 +32,7 @@ const authStore = useAuthStore();
                 </ul>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0" v-if="authStore.user">
                     <li class="nav-item  px-lg-5">
-                        <button @click="$event => authStore.logout" class="btn btn-success">Salir</button>
+                        <button @click="authStore.logout" class="btn btn-success">Salir</button>
                     </li>
                 </ul>
             </div>

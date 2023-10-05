@@ -1,4 +1,5 @@
 <script setup>
+import Swal from 'sweetalert2';
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { sendRequest } from '../../functions';
@@ -9,6 +10,7 @@ const route = useRoute();
 const authStore = useAuthStore();
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + authStore.authToken;
 
+const alert = Swal.mixin({ buttonsStyling: true });
 const form = ref({ id: '', name: '', email: '', phone: '', department_id: '', hide: '' });
 const id = ref(route.params.id);
 const departments = ref([]);
@@ -27,8 +29,16 @@ onMounted(async () => {
 });
 
 const save = () => {
-
-    sendRequest('PUT', form.value, ('/api/employees/' + id.value), '/employees');
+    const largo = form.value.phone;
+    if (largo.length > 15) {
+        alert.fire({
+            title: 'The limit of digits on "phone" is 15.',
+            html: 'Please re-enter the phone number.',
+            confirmButtonText: '<i class="fa-solid fa-check"></i> Ok',
+        });
+    } else {
+        sendRequest('PUT', form.value, ('/api/employees/' + id.value), '/employees');
+    }
 }
 </script>
 
@@ -64,8 +74,11 @@ const save = () => {
                             </span>
                             <select v-model="form.department_id">
                                 <option disabled value="">Please select one</option>
-                                <option v-for="department in departments" :value="department.id">{{ department.name }}
-                                </option>
+                                <template v-for="department in departments">
+                                    <option v-if="department.hide == 'n'" :value="department.id">
+                                        {{ department.name }}
+                                    </option>
+                                </template>
                             </select>
                         </div>
                         <div class="d-grid col-10 mx-auto">

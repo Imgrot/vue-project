@@ -63,9 +63,9 @@ export function visible(name, url, redirect, hide) {
         }).then((result) => {
             if (result.isConfirmed) {
                 axios.put(url, { name: name, hide: newHideValue })
-                    .then(() => { 
-                              window.location.href = redirect;
-                     })
+                    .then(() => {
+                        window.location.href = redirect;
+                    })
                     .catch((error) => {
                         console.error('Error al cambiar la visibilidad:', error);
                     });
